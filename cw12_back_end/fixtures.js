@@ -47,27 +47,27 @@ const run = async () => {
             user: user2._id
         },
         {
-            name: "A Snow Plow Landslide ",
+            title: "A Snow Plow Landslide ",
             image: "snow.jpg",
             user: user1._id
         },
         {
-            name: "A Frosted Surface",
+            title: "A Frosted Surface",
             image: "frosted_surface.jpg",
             user: user3._id
         },
         {
-            name: "Resistant Lava and Erosion",
+            title: "Resistant Lava and Erosion",
             image: "resistant_lava.jpg",
             user: user3._id
         },
         {
-            name: "Central Region of Rocky Impact Crater ",
+            title: "Central Region of Rocky Impact Crater ",
             image: "central_region.jpg",
             user: user2._id
         },
         {
-            name: "Slope Monitoring ",
+            title: "Slope Monitoring ",
             image: "slope_monitoring.jpg",
             user: user1._id
         },

@@ -23,23 +23,17 @@ const upload = multer({storage});
 router.get('/', tryAuth, async (req, res) => {
     try {
         let criteria = {user: req.query.user};
-        let cocktails;
+        let photos;
 
         if (req.query.user) {
-            cocktails = await Photo.find(criteria);
+            photos = await Photo.find(criteria);
 
-            if (cocktails) return res.send(cocktails);
+            if (photos) return res.send(photos);
             else return res.sendStatus(404);
         } else {
 
-            if (!req.user) {
-                cocktails = await Photo.find({published: true});
-            } else if (req.user.role === 'admin') {
-                cocktails = await Photo.find();
-            } else {
-                cocktails = await Photo.find({published: true});
-            }
-            if (cocktails) return res.send(cocktails);
+            photos = await Photo.find();
+            if (photos) return res.send(photos);
             else return res.sendStatus(500);
         }
     } catch (e) {
