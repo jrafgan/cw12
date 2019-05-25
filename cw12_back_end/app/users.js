@@ -7,12 +7,18 @@ const axios = require('axios');
 const nanoid = require('nanoid');
 
 router.post('/', async (req, res) => {
-    const user = new User({
+    let userData = req.body;
+    userData = {
         username: req.body.username,
-        password: req.body.password
-    });
-    user.generateToken();
+        password: req.body.password,
+        name: req.body.name,
+    };
+    if (req.file) {
+        userData.image = req.file.filename;
+    }
 
+    const user = new User(userData);
+    user.generateToken();
     try {
         await user.save();
         return res.send({message: 'User registered ', user});
