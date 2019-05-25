@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {deleteCocktail, getCocktails, toggleCocktailPublish} from "../store/actions/photoActions";
+import {deletePhoto, getPhotos} from "../store/actions/photoActions";
 import connect from "react-redux/es/connect/connect";
 import ImageThumbnail from "../components/ImageThumbnail";
 import {Link} from "react-router-dom";
@@ -7,15 +7,11 @@ import {Link} from "react-router-dom";
 class MyPhotos extends Component {
 
     componentDidMount() {
-        this.props.getCocktails(this.props.user._id)
+        this.props.getPhotos(this.props.user._id)
     }
 
-    deleteCocktail = e => {
-        this.props.deleteCocktail(e.target.id);
-    };
-
-    togglePublishCocktail = e => {
-        this.props.togglePublishCocktail(e.target.id);
+    deletePhoto = e => {
+        this.props.deletePhoto(e.target.id);
     };
 
     render() {
@@ -23,24 +19,18 @@ class MyPhotos extends Component {
         return (
                 <div className="list_div">
                     <div className="column">
-                        <p className="cocktail_p">My Cocktails</p>
-                        {this.props.cocktails && this.props.cocktails.length !== 0 ? this.props.cocktails.map(item => {
-                            return <div className="cocktail_thumbnail" key={item._id} id={item._id}>
+                        <p className="photo_p">My Photos</p>
+                        {this.props.photos && this.props.photos.length !== 0 ? this.props.photos.map(item => {
+                            return <div className="photo_thumbnail" key={item._id} id={item._id}>
                                 <ImageThumbnail image={item.image} class="img_thumbnail"/>
-                                <Link to={"/cocktail_info/" + item._id}>{item.name}</Link>
-                                <p>Recipe:</p>
-                                <p>{item.recipe}</p>
+                                <span>{item.title}</span>
                                 <div>
-                                {item.published ? <Fragment>{this.props.user.role === 'admin' ? <button id={item._id} className="publish_btn"
-                                                                       onClick={this.togglePublishCocktail}>Publish</button> : null}
-                                    {this.props.user.role === 'admin' ? <button id={item._id} className="delete_btn"
-                                                onClick={this.deleteCocktail}>Delete</button> : null}</Fragment> : <Fragment>{this.props.user.role === 'admin' ? <button id={item._id} className="unpublish_btn"
-                                                                                                                    onClick={this.togglePublishCocktail}>Unpublish</button> : <p className="unpublish_btn">On moderation</p>}
-                                    {this.props.user.role === 'admin' ? <button id={item._id} className="delete_btn"
-                                            onClick={this.deleteCocktail}>Delete</button> : null}</Fragment>}
+                                    {this.props.user ?
+                                        <button id={item._id} className="delete_btn"
+                                                onClick={this.deletePhoto}>Delete</button> : null}
                                 </div>
                             </div>
-                        }) : <p>No cocktails yet</p>}
+                        }) : <p>No photos yet</p>}
                     </div>
                 </div>
         );
@@ -49,14 +39,13 @@ class MyPhotos extends Component {
 
 const mapStateToProps = state => ({
     user: state.users.user,
-    error: state.cocktail.error,
-    cocktails: state.cocktail.cocktails,
+    error: state.photo.error,
+    photos: state.photo.photos,
 });
 
 const mapDispatchToProps = dispatch => ({
-    getCocktails: (userId) => dispatch(getCocktails(userId)),
-    deleteCocktail: id => dispatch(deleteCocktail(id)),
-    togglePublishCocktail: id => dispatch(toggleCocktailPublish(id)),
+    getPhotos: (userId) => dispatch(getPhotos(userId)),
+    deletePhoto: id => dispatch(deletePhoto(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyPhotos);
