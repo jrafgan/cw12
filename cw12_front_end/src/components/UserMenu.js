@@ -6,13 +6,12 @@ const UserMenu = ({user, logout}) => {
 
     return (
         <div className="user_menu">
-            <div>
-                Hello, {user.name}!
-                <ImageThumbnail image={user.image} class="avatar_img" facebookId={user.facebookId}/>
+            <div className="user_info">
+                Hello, <NavLink to="/my_photos" exact>{user.name}</NavLink>!
+                <ImageThumbnail image={user.image} class="small_img_thumbnail" facebookId={user.facebookId}/>
             </div>
-            {user.username === 'admin' ? <NavLink to="/admin_office/" exact>Админ офис</NavLink> : null}
-            <NavLink to="/my_cocktail" exact>My cocktails</NavLink>
-            <NavLink to="/add_cocktail" exact>Add cocktail</NavLink>
+            <NavLink to="/my_photos" exact>My photos</NavLink>
+            <NavLink to="/add_photo" exact>Add photo</NavLink>
             <NavLink onClick={logout} to="/" exact>Logout</NavLink>
         </div>)
 };
