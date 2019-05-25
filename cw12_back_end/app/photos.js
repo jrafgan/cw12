@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const nanoid = require('nanoid');
 const config = require('../config');
-const Cocktail = require('../models/Cocktail');
+const Photo = require('../models/Photo');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const permit = require('../middleware/permit');
@@ -26,18 +26,18 @@ router.get('/', tryAuth, async (req, res) => {
         let cocktails;
 
         if (req.query.user) {
-            cocktails = await Cocktail.find(criteria);
+            cocktails = await Photo.find(criteria);
 
             if (cocktails) return res.send(cocktails);
             else return res.sendStatus(404);
         } else {
 
             if (!req.user) {
-                cocktails = await Cocktail.find({published: true});
+                cocktails = await Photo.find({published: true});
             } else if (req.user.role === 'admin') {
-                cocktails = await Cocktail.find();
+                cocktails = await Photo.find();
             } else {
-                cocktails = await Cocktail.find({published: true});
+                cocktails = await Photo.find({published: true});
             }
             if (cocktails) return res.send(cocktails);
             else return res.sendStatus(500);
@@ -50,7 +50,7 @@ router.get('/', tryAuth, async (req, res) => {
 router.get('/:id', (req, res) => {
 
     const criteria = {_id: req.params.id};
-    Cocktail.findOne(criteria).then(cocktail => {
+    Photo.findOne(criteria).then(cocktail => {
         if (cocktail) res.send(cocktail);
         else res.sendStatus(404);
     }).catch(() => res.sendStatus(500));
@@ -70,32 +70,32 @@ router.post('/', [auth, upload.single('image')], (req, res) => {
     }
     cocktailData.user = req.user._id;
 
-    const cocktail = new Cocktail(cocktailData);
+    const cocktail = new Photo(cocktailData);
     cocktail.save()
         .then(() => res.send({message: 'Ok'}))
         .catch(error => res.status(400).send(error));
 });
 
 router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) => {
-    const cocktail = await Cocktail.findById(req.params.id);
+    const cocktail = await Photo.findById(req.params.id);
     if (!cocktail) {
         return res.sendStatus(404);
     }
     cocktail.published = !cocktail.published;
     await cocktail.save();
 
-    const cocktails = await Cocktail.find({user: req.user._id});
+    const cocktails = await Photo.find({user: req.user._id});
     return res.send(cocktails);
 });
 
 router.delete('/', [auth, permit('admin')], async (req, res) => {
     try {
         const id = req.query.id;
-        const cocktail = await Cocktail.findById(id);
+        const cocktail = await Photo.findById(id);
 
         if (cocktail) {
             await cocktail.remove();
-            const coctails = await Cocktail.find();
+            const coctails = await Photo.find();
             return res.status(200).send(coctails);
         } else {
             return res.status(400).send('Not found !');
