@@ -6,7 +6,8 @@ import FormElement from "../components/FormElement";
 class Register extends Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        name: ''
     };
 
     inputChangeHandler = e => {
@@ -22,6 +23,12 @@ class Register extends Component {
 
     getFieldError = fieldName => {
         return this.props.error && this.props.error.errors && this.props.error.errors[fieldName] && this.props.error.errors[fieldName].message;
+    };
+
+    fileChangeHandler = e => {
+        this.setState({
+            [e.target.name]: e.target.files[0]
+        });
     };
 
     render() {
@@ -43,6 +50,7 @@ class Register extends Component {
                         error={this.getFieldError('username')}
                         placeholder="Enter your desired username"
                         autocomplete="new-username"
+                        required
                     />
                     <FormElement
                         propertyName="password"
@@ -53,7 +61,24 @@ class Register extends Component {
                         error={this.getFieldError('password')}
                         placeholder="Enter new secure password"
                         autocomplete="new-password"
+                        required
                     />
+                    <FormElement
+                        propertyName="name"
+                        title="Display name"
+                        type="name"
+                        value={this.state.name}
+                        onChange={this.inputChangeHandler}
+                        error={this.getFieldError('name')}
+                        placeholder="Enter new-name"
+                        autocomplete="new-name"
+                        required
+                    />
+                    <label htmlFor="image">Image</label>
+                    <input type="file" name="image" id="image" onChange={this.fileChangeHandler}/>
+                    {this.getFieldError('image') && (<div className="invalid-feedback">
+                        {this.getFieldError('image')}
+                    </div>)}
                     <div>
                         <button type="submit" className="submit_btn">Register</button>
                     </div>
