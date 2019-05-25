@@ -26,13 +26,13 @@ router.get('/', tryAuth, async (req, res) => {
         let photos;
 
         if (req.query.user) {
-            photos = await Photo.find(criteria);
+            photos = await Photo.find(criteria).populate('user');
 
             if (photos) return res.send(photos);
             else return res.sendStatus(404);
         } else {
 
-            photos = await Photo.find();
+            photos = await Photo.find().populate('user');
             if (photos) return res.send(photos);
             else return res.sendStatus(500);
         }
@@ -42,7 +42,6 @@ router.get('/', tryAuth, async (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-
     const criteria = {_id: req.params.id};
     Photo.findOne(criteria).then(cocktail => {
         if (cocktail) res.send(cocktail);
@@ -52,45 +51,33 @@ router.get('/:id', (req, res) => {
 
 
 router.post('/', [auth, upload.single('image')], (req, res) => {
-    let cocktailData = req.body;
+    let photolData = req.body;
     try {
-        cocktailData.ingredients = JSON.parse(req.body.ingredients);
+
     } catch (e) {
         console.log('this is error : ', e);
 
     }
     if (req.file) {
-        cocktailData.image = req.file.filename;
+        photolData.image = req.file.filename;
     }
-    cocktailData.user = req.user._id;
+    photolData.user = req.user._id;
 
-    const cocktail = new Photo(cocktailData);
-    cocktail.save()
+    const photo = new Photo(photolData);
+    photo.save()
         .then(() => res.send({message: 'Ok'}))
         .catch(error => res.status(400).send(error));
 });
 
-router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) => {
-    const cocktail = await Photo.findById(req.params.id);
-    if (!cocktail) {
-        return res.sendStatus(404);
-    }
-    cocktail.published = !cocktail.published;
-    await cocktail.save();
-
-    const cocktails = await Photo.find({user: req.user._id});
-    return res.send(cocktails);
-});
-
-router.delete('/', [auth, permit('admin')], async (req, res) => {
+router.delete('/', auth, async (req, res) => {
     try {
         const id = req.query.id;
-        const cocktail = await Photo.findById(id);
+        const photo = await Photo.findById(id);
 
-        if (cocktail) {
-            await cocktail.remove();
-            const coctails = await Photo.find();
-            return res.status(200).send(coctails);
+        if (photo) {
+            await photo.remove();
+            const photos = await Photo.find({user: req.user._id});
+            return res.status(200).send(photos);
         } else {
             return res.status(400).send('Not found !');
         }
