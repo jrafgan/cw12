@@ -4,7 +4,7 @@ const rootPath = __dirname;
 module.exports = {
   rootPath,
   uploadPath: path.join(rootPath, 'public/uploads'),
-    dbUrl: 'mongodb://localhost/labw95',
+    dbUrl: 'mongodb://localhost/cw12',
     mongoOptions: {
       useNewUrlParser: true,
       useCreateIndex: true
