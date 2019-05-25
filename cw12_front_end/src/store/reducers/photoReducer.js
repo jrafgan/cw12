@@ -1,33 +1,23 @@
 import {
-    FETCH_COCKTAIL_SUCCESS,
-    FETCH_ARTIST_SUCCESS,
-    FETCH_COCKTAILS_SUCCESS, FETCH_FAILURE,
-    FETCH_TRACKS_SUCCESS
-} from "../actions/photoActions";
+    FETCH_PHOTO_SUCCESS,
+    FETCH_PHOTOS_SUCCESS, FETCH_FAILURE} from "../actions/photoActions";
 
 const initialState = {
-    cocktails: null,
-    cocktail: null,
+    photos: null,
+    photo: null,
     tracks: null,
     error: null
 };
 
 const photoReducer = (state = initialState, action) => {
     switch (action.type) {
-        case FETCH_COCKTAILS_SUCCESS:
-            return {...state, cocktails: action.cocktails};
+        case FETCH_PHOTOS_SUCCESS:
+            return {...state, photos: action.photos};
 
-        case FETCH_ARTIST_SUCCESS:
-            return {...state, cocktails: action.cocktails};
-
-        case FETCH_COCKTAIL_SUCCESS:
-            return {...state, cocktail: action.cocktail};
-
-        case FETCH_TRACKS_SUCCESS:
-            return {...state, tracks: action.tracks};
+        case FETCH_PHOTO_SUCCESS:
+            return {...state, photo: action.photo};
 
         case FETCH_FAILURE:
-            console.log(action.error);
             return {...state, error: action.error};
 
         default:
