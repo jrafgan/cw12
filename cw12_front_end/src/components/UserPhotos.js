@@ -7,7 +7,6 @@ import {Link, NavLink} from "react-router-dom";
 class UserPhotos extends Component {
 
 
-
     state = {
         popUpShow: false
     };
@@ -17,14 +16,14 @@ class UserPhotos extends Component {
         this.props.getPhotos(this.props.match.params.id)
     }
 
-    photoInfo = e =>{
+    photoInfo = e => {
         const id = e.target.id;
         this.props.getPhoto(id);
         this.setState({popUpShow: true})
     };
 
 
-    closePopUp = e =>{
+    closePopUp = e => {
         this.setState({popUpShow: false})
     };
 
@@ -43,7 +42,8 @@ class UserPhotos extends Component {
                     }) : <p>No photos yet</p>}
                 </div>
                 {this.state.popUpShow && this.props.photo ? <div className="pop_up" onClick={this.closePopUp}>
-                    {<div className="big_img_div"><ImageThumbnail image={this.props.photo.image} class="big_img_thumbnail"/>
+                    {<div className="big_img_div"><ImageThumbnail image={this.props.photo.image}
+                                                                  class="big_img_thumbnail"/>
                         <p className="photo_p border" onClick={this.closePopUp}>Close</p></div>}
                 </div> : null}
             </div>
